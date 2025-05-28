@@ -36,7 +36,7 @@ export default function Login() {
         className="w-full max-w-sm bg-black/70 backdrop-blur rounded-2xl p-8 space-y-6"
       >
         <h1 className="text-2xl font-semibold text-center text-white">
-          Login Admin
+          World of Tokusatsu - Login Admin
         </h1>
         <div className="space-y-4">
           <div>
