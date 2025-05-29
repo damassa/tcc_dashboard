@@ -13,6 +13,7 @@ export default function SeriesPage() {
     const fetchSeries = async () => {
       try {
         const { data, total } = await getSeries(currentPage, limit);
+        console.log(data);
         setSeries(data);
         setTotalPages(Math.ceil(total / limit));
       } catch (error) {

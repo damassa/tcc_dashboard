@@ -9,7 +9,7 @@ export function useCrud<T>(endpoint: string) {
   const fetchAll = async () => {
     setLoading(true);
     try {
-      const res = await api.get(endpoint);
+      const res = await api.get(endpoint, { params: { page: 0, size: 6 } });
       setItems(res.data);
     } catch (err: any) {
       setError(err.message);
@@ -25,7 +25,9 @@ export function useCrud<T>(endpoint: string) {
 
   const update = async (id: string, data: Partial<T>) => {
     const res = await api.put(`${endpoint}/${id}`, data);
-    setItems((prev) => prev.map((item: any) => (item.id === id ? res.data : item)));
+    setItems((prev) =>
+      prev.map((item: any) => (item.id === id ? res.data : item))
+    );
   };
 
   const remove = async (id: string) => {

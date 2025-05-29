@@ -9,7 +9,12 @@ interface Category {
 }
 
 export default function CategoryList() {
-  const { items: categories, loading, error, remove } = useCrud<Category>("/categories");
+  const {
+    items: categories,
+    loading,
+    error,
+    remove,
+  } = useCrud<Category>("/api/v1/categories");
   const [editing, setEditing] = useState<Category | null>(null);
 
   return (
@@ -50,10 +55,7 @@ export default function CategoryList() {
       </div>
 
       {editing && (
-        <CategoryForm
-          initial={editing}
-          onClose={() => setEditing(null)}
-        />
+        <CategoryForm initial={editing} onClose={() => setEditing(null)} />
       )}
     </div>
   );

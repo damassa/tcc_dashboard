@@ -2,16 +2,19 @@ interface Props {
   serie: {
     id: string;
     title: string;
-    thumbUrl?: string;
+    bigImage?: string;
+    openingVideo: string;
+    image?: string;
+    plot: string;
   };
 }
 
 export default function SeriesCard({ serie }: Props) {
   return (
     <article className="rounded-xl bg-zinc-900 p-4 space-y-2">
-      {serie.thumbUrl && (
+      {serie.image && (
         <img
-          src={serie.thumbUrl}
+          src={serie.image}
           alt={serie.title}
           className="w-full h-40 object-cover rounded-lg"
         />
