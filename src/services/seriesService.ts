@@ -1,12 +1,15 @@
+import { api } from "../api";
+
 export const getSeries = async (page: number, limit: number) => {
-  const url = `${import.meta.env.VITE_API_URL}/series?page=${page}&limit=${limit}`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error("Erro ao buscar séries");
-  }
-  const json = await res.json();
+  const res = await api.get(`/series/pageable`, {
+    params: {
+      page: page - 1,
+      size: limit,
+    },
+  });
+
   return {
-    data: json.series || [],
-    total: json.totalCount || 0,
+    data: res.data.content || [],
+    total: res.data.totalElements || 0,
   };
 };

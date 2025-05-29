@@ -1,6 +1,6 @@
+import type { ReactNode } from "react";
 import {
   createContext,
-  ReactNode,
   useCallback,
   useContext,
   useEffect,
@@ -17,6 +17,7 @@ interface User {
 interface AuthContextValue {
   user: User | null;
   token: string | null;
+  loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -26,38 +27,60 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("tcc_token");
-    const storedUser = localStorage.getItem("tcc_user");
+    const storedToken = sessionStorage.getItem("jwt");
+    const storedUser = sessionStorage.getItem("user");
     if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
-      setAuthToken(storedToken);
+      try {
+        setToken(storedToken);
+        setUser(JSON.parse(storedUser));
+        setAuthToken(storedToken);
+      } catch (e) {
+        console.error("Erro ao fazer parse do usuário:", storedUser);
+        sessionStorage.removeItem("user"); // remove inválido para não quebrar de novo
+      }
     }
+    setLoading(false);
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const res = await api.post("/auth/login", { email, password });
-    const { token: t, user: u } = res.data;
-    setToken(t);
-    setUser(u);
-    localStorage.setItem("tcc_token", t);
-    localStorage.setItem("tcc_user", JSON.stringify(u));
-    setAuthToken(t);
+    try {
+      const res = await api.post(
+        "/api/v1/login",
+        { email, senha: password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const { token: t, user: u } = res.data;
+      setToken(t);
+      setUser(u);
+      sessionStorage.setItem("jwt", t);
+      setAuthToken(t);
+
+      sessionStorage.setItem("user", JSON.stringify(u)); // ← corrigido
+    } catch (err: any) {
+      console.error("Erro ao fazer login", err.response?.data || err.message);
+      throw err;
+    }
   }, []);
 
   const logout = useCallback(() => {
     setToken(null);
     setUser(null);
-    localStorage.removeItem("tcc_token");
-    localStorage.removeItem("tcc_user");
+    sessionStorage.removeItem("jwt");
+    sessionStorage.removeItem("user");
     setAuthToken();
   }, []);
 
   const value = useMemo(
-    () => ({ user, token, login, logout }),
-    [user, token, login, logout]
+    () => ({ user, token, login, logout, loading }),
+    [user, token, login, logout, loading]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
