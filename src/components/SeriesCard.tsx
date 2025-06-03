@@ -1,15 +1,19 @@
+import { Pencil } from "lucide-react";
+
 interface Props {
   serie: {
-    id: string;
+    id: number;
     title: string;
     bigImage?: string;
     openingVideo: string;
     image?: string;
     plot: string;
+    year: number;
   };
+  onEdit?: (serie: Props["serie"]) => void;
 }
 
-export default function SeriesCard({ serie }: Props) {
+export default function SeriesCard({ serie, onEdit }: Props) {
   return (
     <article className="rounded-xl bg-zinc-900 p-4 space-y-2">
       {serie.image && (
@@ -20,6 +24,16 @@ export default function SeriesCard({ serie }: Props) {
         />
       )}
       <h3 className="text-lg font-medium text-white">{serie.title}</h3>
+
+      {/* Botão Editar */}
+      {onEdit && (
+        <button
+          onClick={() => onEdit(serie)}
+          className="text-sm text-blue-400 hover:underline cursor-pointer"
+        >
+          <Pencil className="w-4 h-4 text-white" />
+        </button>
+      )}
     </article>
   );
 }
