@@ -4,22 +4,23 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
-  if (totalPages <= 1) return null;
-
+export function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationProps) {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="flex justify-center mt-4 gap-2">
+    <div className="flex justify-center mt-6 gap-2">
       {pages.map((page) => (
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          disabled={page === currentPage}
-          className={`px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200 ${
+          className={`px-3 py-1 rounded ${
             page === currentPage
-              ? "bg-purple-600 text-white cursor-not-allowed"
-              : "bg-white text-black hover:bg-purple-200"
+              ? "bg-white text-black"
+              : "bg-zinc-700 text-white"
           }`}
         >
           {page}
@@ -27,4 +28,4 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Pagination
       ))}
     </div>
   );
-};
+}
