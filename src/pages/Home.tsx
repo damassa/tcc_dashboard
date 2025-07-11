@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import type { SerieResponse } from "../types/serie";
-import { getAllCategories } from "../api/CategoryService";
+import {
+  createCategory,
+  getAllCategories,
+  updateCategory,
+} from "../api/CategoryService";
 import { CategoryResponse } from "../types/category";
 import {
   getAllSeries,
@@ -22,10 +26,15 @@ const Home: React.FC = () => {
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [modalCategoryVisible, setModalCategoryVisible] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState<CategoryResponse | null>(
+    null
+  );
 
   const itemsPerPage = 4;
 
-  const { modalType, editingSerie, closeModal } = useModal();
+  const { modalType, editingSerie, editingCategory, closeModal, openModal } =
+    useModal();
 
   useEffect(() => {
     const fetchSeries = async () => {
@@ -76,8 +85,16 @@ const Home: React.FC = () => {
 
   const handleCategorySubmit = async (data: { name: string }) => {
     try {
-      // Você pode adicionar a chamada para criar categoria aqui
-      toast.success("Categoria criada com sucesso");
+      if (editingCategory) {
+        await updateCategory(editingCategory.id, data);
+        toast.success("Categoria atualizada com sucesso");
+      } else {
+        await createCategory(data);
+        toast.success("Categoria criada com sucesso");
+      }
+      const updated = await getAllCategories();
+      setCategories(updated);
+
       closeModal();
     } catch (error) {
       toast.error("Erro ao salvar categoria");
@@ -99,6 +116,16 @@ const Home: React.FC = () => {
   const totalPages = Math.ceil(series.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = series.slice(startIndex, startIndex + itemsPerPage);
+  const openCategoryModal = (
+    category?: { id: number; name: string } | null
+  ) => {
+    setCategoryToEdit(category ?? null);
+    setModalCategoryVisible(true);
+  };
+
+  const onCategorySuccess = () => {
+    fetchCategories(); // atualizar lista após criar/editar
+  };
 
   const goToPrevious = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
@@ -143,7 +170,7 @@ const Home: React.FC = () => {
 
                     <div className="flex justify-between text-sm">
                       <button
-                        onClick={() => useModal().openModal("serie", serie)}
+                        onClick={() => openModal("serie", serie)}
                         className="flex items-center gap-1 text-purple-400 hover:text-purple-300 transition cursor-pointer"
                       >
                         <Pencil className="w-4 h-4" />
@@ -200,6 +227,7 @@ const Home: React.FC = () => {
         visible={modalType === "category"}
         onClose={closeModal}
         onSubmit={handleCategorySubmit}
+        initialValue={editingCategory?.name ?? null}
       />
 
       <DeleteModal
