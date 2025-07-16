@@ -71,6 +71,7 @@ const CategoryFormModal: React.FC<Props> = ({
             {...register("name")}
             placeholder="Nome da categoria"
             disabled={isSubmitting}
+            autoFocus
             className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg"
           />
           {errors.name && (

@@ -64,15 +64,34 @@ const Home: React.FC = () => {
     fetchCategories();
   }, []);
 
-  const handleSubmit = async (data: Omit<SerieResponse, "id">) => {
+  const handleSubmit = async (
+    data: Omit<SerieResponse, "id"> & { categoryName: string }
+  ) => {
     try {
+      const category = categories.find((c) => c.name === data.categoryName);
+      if (!category) {
+        toast.error("Categoria não encontrada");
+        return;
+      }
+
+      const payload = {
+        name: data.name,
+        plot: data.plot,
+        year: data.year,
+        image: data.image,
+        bigImage: data.bigImage,
+        opening_video: data.opening_video,
+        categoryId: category.id,
+      };
+
       if (editingSerie) {
-        await updateSerie(editingSerie.id, data);
+        await updateSerie(editingSerie.id, payload);
         toast.success("Série atualizada com sucesso");
       } else {
-        await createSerie(data);
+        await createSerie(payload);
         toast.success("Série criada com sucesso");
       }
+
       const updated = await getAllSeries();
       setSeries(updated);
     } catch (e) {

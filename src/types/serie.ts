@@ -7,7 +7,7 @@ export class SerieResponse {
     public bigImage: string,
     public opening_video: string,
     public plot: string,
-    public categoryName: string
+    public categoryId: number
   ) {
     this.id = id;
     this.name = name;
@@ -16,6 +16,18 @@ export class SerieResponse {
     this.bigImage = bigImage;
     this.opening_video = opening_video;
     this.plot = plot;
-    this.categoryName = categoryName;
+    this.categoryId = categoryId;
   }
 }
+
+// types/serie.ts
+
+export type SeriePayload = {
+  name: string;
+  plot: string;
+  year: number;
+  image: string;
+  bigImage: string;
+  opening_video: string;
+  categoryId: number;
+};

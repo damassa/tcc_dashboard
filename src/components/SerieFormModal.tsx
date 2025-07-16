@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { SerieResponse } from "../types/serie";
+import { SerieResponse, type SeriePayload } from "../types/serie";
 import { CategoryResponse } from "../types/category";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -8,19 +8,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 type Props = {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (data: Omit<SerieResponse, "id">) => void;
+  onSubmit: (data: SeriePayload) => void;
   serie?: SerieResponse | null;
   categories: CategoryResponse[];
 };
 
 const serieSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
-  year: z.number().min(1900, "Ano inválido"),
+  year: z.coerce.number().min(1900, "Ano inválido"),
   image: z.string().url("URL inválida"),
   bigImage: z.string().url("URL inválida"),
   opening_video: z.string().url("URL inválida"),
   plot: z.string().min(5, "Sinopse muito curta"),
-  categoryName: z.string().min(1, "Categoria obrigatória"),
+  categoryId: z.coerce.number().min(1, "Categoria obrigatória"),
 });
 
 type SerieFormData = z.infer<typeof serieSchema>;
@@ -46,7 +46,7 @@ const SerieFormModal: React.FC<Props> = ({
       bigImage: "",
       opening_video: "",
       plot: "",
-      categoryName: "",
+      categoryId: 0,
     },
   });
 
@@ -55,8 +55,8 @@ const SerieFormModal: React.FC<Props> = ({
     if (!visible) return;
 
     if (serie) {
-      const { id, ...data } = serie;
-      reset({ ...data }); // preenche todos os campos ao editar
+      const { ...data } = serie;
+      reset({ ...data, categoryId: Number(data.categoryId) }); // preenche todos os campos ao editar
     } else {
       reset({
         name: "",
@@ -65,7 +65,7 @@ const SerieFormModal: React.FC<Props> = ({
         bigImage: "",
         opening_video: "",
         plot: "",
-        categoryName: "",
+        categoryId: 0,
       }); // limpa ao criar
     }
   }, [serie, reset, visible]);
@@ -140,19 +140,19 @@ const SerieFormModal: React.FC<Props> = ({
           )}
 
           <select
-            {...register("categoryName")}
+            {...register("categoryId")}
             className="px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 col-span-1 sm:col-span-2"
           >
             <option value="">Selecione a categoria</option>
             {categories.map((cat) => (
-              <option key={cat.id} value={cat.name}>
+              <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>
             ))}
           </select>
-          {errors.categoryName && (
+          {errors.categoryId && (
             <p className="text-red-400 text-sm col-span-2">
-              {errors.categoryName.message}
+              {errors.categoryId.message}
             </p>
           )}
 
