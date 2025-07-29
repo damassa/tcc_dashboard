@@ -11,6 +11,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import CategoryFormModal from "../components/CategoryFormModal";
 import DeleteModal from "../components/DeleteModal";
+import Navbar from "../components/Navbar";
 
 const CategoryPage: React.FC = () => {
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
@@ -76,90 +77,86 @@ const CategoryPage: React.FC = () => {
   );
 
   return (
-    <div className="p-6 text-white">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-purple-400">Categorias</h1>
-        <button
-          onClick={() => {
-            setCategoryToEdit(null);
-            setModalVisible(true);
-          }}
-          className="bg-purple-600 px-4 py-2 rounded hover:bg-purple-500"
-        >
-          Nova Categoria
-        </button>
-      </div>
-
-      {loading ? (
-        <p>Carregando categorias...</p>
-      ) : currentItems.length === 0 ? (
-        <p className="text-gray-400">Nenhuma categoria encontrada.</p>
-      ) : (
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {currentItems.map((cat) => (
-            <div
-              key={cat.id}
-              className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl flex flex-col justify-between"
-            >
-              <h2 className="text-lg font-semibold">{cat.name}</h2>
-              <div className="flex justify-end gap-2 mt-4">
-                <button
-                  onClick={() => {
-                    setCategoryToEdit(cat);
-                    setModalVisible(true);
-                  }}
-                  className="text-purple-400 hover:text-purple-300 flex items-center gap-1"
-                >
-                  <Pencil className="w-4 h-4" />
-                  Editar
-                </button>
-                <button
-                  onClick={() => setCategoryToDelete(cat)}
-                  className="text-red-400 hover:text-red-300 flex items-center gap-1"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  Excluir
-                </button>
-              </div>
-            </div>
-          ))}
+    <>
+      <Navbar />
+      <div className="p-6 text-white">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-purple-400">Categorias</h1>
         </div>
-      )}
 
-      {/* Paginação */}
-      <div className="flex justify-center gap-4 mt-8">
-        <button
-          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700 disabled:opacity-40"
-        >
-          Anterior
-        </button>
-        <span className="text-sm text-gray-300">
-          Página {currentPage} de {totalPages}
-        </span>
-        <button
-          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700 disabled:opacity-40"
-        >
-          Próxima
-        </button>
+        {loading ? (
+          <p>Carregando categorias...</p>
+        ) : currentItems.length === 0 ? (
+          <p className="text-gray-400">Nenhuma categoria encontrada.</p>
+        ) : (
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {currentItems.map((cat) => (
+              <div
+                key={cat.id}
+                className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl flex flex-col justify-between"
+              >
+                <h2 className="text-lg font-semibold">{cat.name}</h2>
+                <div className="flex justify-end gap-2 mt-4">
+                  <button
+                    onClick={() => {
+                      setCategoryToEdit(cat);
+                      setModalVisible(true);
+                    }}
+                    className="text-purple-400 hover:text-purple-300 flex items-center gap-1"
+                  >
+                    <Pencil className="w-4 h-4" />
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => setCategoryToDelete(cat)}
+                    className="text-red-400 hover:text-red-300 flex items-center gap-1"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Paginação */}
+        <div className="flex justify-center gap-4 mt-8">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700 disabled:opacity-40"
+          >
+            Anterior
+          </button>
+          <span className="text-sm text-gray-300">
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700 disabled:opacity-40"
+          >
+            Próxima
+          </button>
+        </div>
+
+        <CategoryFormModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onSubmit={handleSubmit}
+          initialValue={categoryToEdit?.name ?? null}
+        />
+
+        <DeleteModal
+          serie={categoryToDelete as any} // reutilizando modal de série
+          onConfirm={(id) =>
+            handleDeleteConfirmed((categoryToDelete as any).id)
+          }
+          onCancel={() => setCategoryToDelete(null)}
+        />
       </div>
-
-      <CategoryFormModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSubmit={handleSubmit}
-        initialValue={categoryToEdit?.name ?? null}
-      />
-
-      <DeleteModal
-        serie={categoryToDelete as any} // reutilizando modal de série
-        onConfirm={(id) => handleDeleteConfirmed((categoryToDelete as any).id)}
-        onCancel={() => setCategoryToDelete(null)}
-      />
-    </div>
+    </>
   );
 };
 

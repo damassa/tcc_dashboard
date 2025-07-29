@@ -14,7 +14,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<PrivateRoute element={<Home />} />} />
 
       <Route
-        path="/categorias"
+        path="/categories"
         element={<PrivateRoute element={<CategoryPage />} />}
       />
 

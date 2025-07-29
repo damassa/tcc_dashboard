@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { LogOut, PlusCircle, Film, Menu, X } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useModal } from "../context/ModalContext";
 import LogoImage from "../assets/images/logo.png";
 
@@ -23,7 +23,9 @@ const Navbar: React.FC = () => {
       <div className="flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2 text-purple-500 font-bold text-xl tracking-wide">
-          <img src={LogoImage} className="w-6 h-6" />
+          <Link to="/">
+            <img src={LogoImage} className="w-8 h-8" />
+          </Link>
           <span>Toku Dashboard</span>
         </div>
 
@@ -39,6 +41,11 @@ const Navbar: React.FC = () => {
 
         {/* Itens do menu (desktop) */}
         <div className="hidden md:flex gap-6 text-sm font-medium">
+          <Link to="/categories">
+            <button className="flex items-center gap-2 hover:text-purple-400 transition cursor-pointer">
+              Categorias
+            </button>
+          </Link>
           <button
             onClick={() => openModal("serie")}
             className="flex items-center gap-2 hover:text-purple-400 transition cursor-pointer"

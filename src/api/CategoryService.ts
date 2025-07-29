@@ -7,25 +7,23 @@ export const getAllCategories = async (): Promise<CategoryResponse[]> => {
   return res.data;
 };
 
-export async function createCategory(data: { name: string }) {
-  const res = await fetch("/api/v1/categories", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) throw new Error("Erro ao criar categoria");
-  return res.json();
-}
+export const createCategory = async (
+  name: string
+): Promise<CategoryResponse> => {
+  try {
+    console.log(api);
+    const res = await api.post("/api/v1/categories", name);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
-export async function updateCategory(id: number, data: { name: string }) {
-  const res = await fetch(`/api/v1/categories/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) throw new Error("Erro ao atualizar categoria");
-  return res.json();
-}
+export const updateCategory = async (id: number): Promise<CategoryResponse> => {
+  const res = await api.put(`/api/v1/categories/${id}`);
+  return res.data;
+};
 
 export const deleteCategory = async (id: number) => {
   const res = await api.delete(`/api/v1/categories/${id}`);
