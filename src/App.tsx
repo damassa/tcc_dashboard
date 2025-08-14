@@ -4,20 +4,15 @@ import "./styles/global.css";
 
 import { RouterProvider } from "react-router-dom";
 import { SerieProvider } from "./context/SerieProvider";
-import { Toaster } from "sonner";
-import { ModalProvider } from "./context/ModalContext";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ModalProvider>
-        <SerieProvider>
-          <RouterProvider router={router} />
-          <Toaster position="top-right" richColors />
-        </SerieProvider>
-      </ModalProvider>
+      <SerieProvider>
+        <RouterProvider router={router} />
+      </SerieProvider>
     </QueryClientProvider>
   );
 }

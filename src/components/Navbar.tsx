@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { LogOut, PlusCircle, Film, Menu, X } from "lucide-react";
+import { LogOut, PlusCircle, Menu, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useModal } from "../context/ModalContext";
 import LogoImage from "../assets/images/logo.png";
 
 const Navbar: React.FC = () => {
-  const { openModal } = useModal();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -41,26 +39,21 @@ const Navbar: React.FC = () => {
 
         {/* Itens do menu (desktop) */}
         <div className="hidden md:flex gap-6 text-sm font-medium">
-          <Link to="/categories">
-            <button className="flex items-center gap-2 hover:text-purple-400 transition cursor-pointer">
-              Categorias
-            </button>
-          </Link>
-          <button
-            onClick={() => openModal("serie")}
+          <Link
+            to="/addSerie"
             className="flex items-center gap-2 hover:text-purple-400 transition cursor-pointer"
           >
             <PlusCircle className="w-5 h-5" />
             Nova Série
-          </button>
+          </Link>
 
-          <button
-            onClick={() => openModal("category")}
+          <Link
+            to="/addCategory"
             className="flex items-center gap-2 hover:text-purple-400 transition cursor-pointer"
           >
             <PlusCircle className="w-5 h-5" />
             Nova Categoria
-          </button>
+          </Link>
 
           <button
             onClick={handleLogout}
@@ -77,7 +70,6 @@ const Navbar: React.FC = () => {
         <div className="md:hidden mt-4 bg-zinc-900 rounded-lg p-4 shadow-inner flex flex-col gap-4 text-sm font-medium animate-fade-in-down">
           <button
             onClick={() => {
-              openModal("serie");
               setIsOpen(false);
             }}
             className="flex items-center gap-2 hover:text-purple-400 transition"
@@ -88,7 +80,6 @@ const Navbar: React.FC = () => {
 
           <button
             onClick={() => {
-              openModal("category");
               setIsOpen(false);
             }}
             className="flex items-center gap-2 hover:text-purple-400 transition"

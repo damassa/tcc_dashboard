@@ -5,8 +5,9 @@ import {
 } from "react-router-dom";
 import Login from "../pages/Login";
 import PrivateRoute from "../components/PrivateRoute";
-import CategoryPage from "../pages/CategoryPage";
 import Home from "../pages/Home";
+import AddCategoryPage from "../pages/AddCategoryPage";
+import AddSeriePage from "../pages/AddSeriePage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -14,8 +15,13 @@ const router = createBrowserRouter(
       <Route path="/" element={<PrivateRoute element={<Home />} />} />
 
       <Route
-        path="/categories"
-        element={<PrivateRoute element={<CategoryPage />} />}
+        path="/addSerie"
+        element={<PrivateRoute element={<AddSeriePage />} />}
+      />
+
+      <Route
+        path="/addCategory"
+        element={<PrivateRoute element={<AddCategoryPage />} />}
       />
 
       <Route path="/login" element={<Login />} />
