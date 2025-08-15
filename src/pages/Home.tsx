@@ -3,15 +3,19 @@ import type { SerieResponse } from "../types/serie";
 import { CategoryResponse } from "../types/category";
 import { getAllSeries, deleteSerie } from "../api/SerieService";
 import Navbar from "../components/Navbar";
-import DeleteModal from "../components/DeleteModal";
+import DeleteSerieModal from "../components/DeleteSerieModal";
 import { Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getAllCategories } from "../api/CategoryService";
+import { deleteCategory, getAllCategories } from "../api/CategoryService";
+import DeleteCategoryModal from "../components/DeleteCategoryModal";
 
 const Home: React.FC = () => {
   const [series, setSeries] = useState<SerieResponse[]>([]);
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const [serieDelete, setSerieDelete] = useState<SerieResponse | null>(null);
+  const [categoryDelete, setCategoryDelete] = useState<CategoryResponse | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -42,64 +46,7 @@ const Home: React.FC = () => {
     fetchCategories();
   }, []);
 
-  // const handleSubmit = async (
-  //   data: Omit<SerieResponse, "id"> & { categoryName: string }
-  // ) => {
-  //   try {
-  //     const category = categories.find((c) => c.name === data.categoryName);
-  //     if (!category) {
-  //       toast.error("Categoria não encontrada");
-  //       return;
-  //     }
-
-  //     const payload = {
-  //       name: data.name,
-  //       plot: data.plot,
-  //       year: data.year,
-  //       image: data.image,
-  //       bigImage: data.bigImage,
-  //       opening_video: data.opening_video,
-  //       categoryId: category.id,
-  //     };
-
-  //     if (editingSerie) {
-  //       await updateSerie(editingSerie.id, payload);
-  //       toast.success("Série atualizada com sucesso");
-  //     } else {
-  //       await createSerie(payload);
-  //       toast.success("Série criada com sucesso");
-  //     }
-
-  //     const updated = await getAllSeries();
-  //     setSeries(updated);
-  //   } catch (e) {
-  //     toast.error("Erro ao salvar série");
-  //     console.error("Erro ao salvar série", e);
-  //   } finally {
-  //     closeModal();
-  //   }
-  // };
-
-  // const handleCategorySubmit = async (data: { name: string }) => {
-  //   try {
-  //     if (editingCategory) {
-  //       await updateCategory(editingCategory.id, data);
-  //       toast.success("Categoria atualizada com sucesso");
-  //     } else {
-  //       await createCategory(data);
-  //       toast.success("Categoria criada com sucesso");
-  //     }
-  //     const updated = await getAllCategories();
-  //     setCategories(updated);
-
-  //     closeModal();
-  //   } catch (error) {
-  //     toast.error("Erro ao salvar categoria");
-  //     console.error(error);
-  //   }
-  // };
-
-  const handleDeleteConfirmed = async (id: number) => {
+  const handleSerieDeleteConfirmed = async (id: number) => {
     try {
       await deleteSerie(id);
       setSeries((prev) => prev.filter((s) => s.id !== id));
@@ -107,6 +54,17 @@ const Home: React.FC = () => {
       console.error("Erro ao excluir série", error);
     } finally {
       setSerieDelete(null);
+    }
+  };
+
+  const handleCategoryDeleteConfirmed = async (id: number) => {
+    try {
+      await deleteCategory(id);
+      setCategories((prev) => prev.filter((s) => s.id !== id));
+    } catch (error) {
+      console.error("Erro ao excluir categoria", error);
+    } finally {
+      setCategoryDelete(null);
     }
   };
 
@@ -142,20 +100,21 @@ const Home: React.FC = () => {
               {currentItems.map((serie) => (
                 <div
                   key={serie.id}
-                  className="bg-zinc-900 rounded-2xl shadow-md border border-zinc-800 hover:shadow-purple-500/20 transition duration-300"
+                  className="bg-zinc-900 rounded-2xl shadow-md border border-zinc-800 hover:shadow-purple-500/20 transition duration-300 flex flex-col"
                 >
                   <img
                     src={serie.image}
                     alt={serie.name}
                     className="w-full h-40 object-cover rounded-t-2xl"
                   />
-                  <div className="p-4">
+                  <div className="p-4 flex flex-col flex-grow">
                     <h2 className="text-lg font-semibold truncate">
                       {serie.name}
                     </h2>
                     <p className="text-sm text-gray-400 mb-4">{serie.year}</p>
 
-                    <div className="flex justify-between text-sm">
+                    {/* Botões no canto direito */}
+                    <div className="mt-auto flex justify-end gap-2">
                       <Link
                         to="/editSerie"
                         className="flex items-center gap-1 text-purple-400 hover:text-purple-300 transition cursor-pointer"
@@ -209,27 +168,48 @@ const Home: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {categories.map((category) => (
-              <div key={category.id}>
-                <div className="bg-zinc-900 rounded-2xl shadow-md border border-zinc-800 hover:shadow-purple-500/20 transition duration-300">
-                  <div className="p-4">
-                    <h2 className="text-lg font-semibold truncate">
-                      {category.name}
-                    </h2>
-                  </div>
-                  <div className="flex justify-end">
-                    <button>Editar categoria</button>
-                    <button>Excluir categoria</button>
-                  </div>
+              <div
+                key={category.id}
+                className="bg-zinc-900 rounded-2xl shadow-md border border-zinc-800 hover:shadow-purple-500/20 transition duration-300 flex flex-col"
+              >
+                <div className="p-4 flex-grow">
+                  <h2 className="text-lg font-semibold truncate">
+                    {category.name}
+                  </h2>
+                </div>
+
+                {/* Botões no canto direito */}
+                <div className="p-4 flex justify-end gap-2">
+                  <Link
+                    to="/editCategory"
+                    className="flex items-center gap-1 text-purple-400 hover:text-purple-300 transition cursor-pointer"
+                  >
+                    <Pencil className="w-4 h-4" />
+                    Editar
+                  </Link>
+
+                  <button
+                    onClick={() => setCategoryDelete(category)}
+                    className="flex items-center gap-1 text-red-400 hover:text-red-300 transition cursor-pointer"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Excluir
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
-      <DeleteModal
+      <DeleteSerieModal
         serie={serieDelete}
-        onConfirm={(id) => handleDeleteConfirmed(id)}
+        onConfirm={(id) => handleSerieDeleteConfirmed(id)}
         onCancel={() => setSerieDelete(null)}
+      />
+      <DeleteCategoryModal
+        category={categoryDelete}
+        onConfirm={(id) => handleCategoryDeleteConfirmed(id)}
+        onCancel={() => setCategoryDelete(null)}
       />
     </>
   );

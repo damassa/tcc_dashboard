@@ -1,4 +1,3 @@
-// src/components/DeleteConfirmDialog.tsx
 import React from "react";
 import { SerieResponse } from "../types/serie";
 
@@ -8,7 +7,7 @@ type Props = {
   onCancel: () => void;
 };
 
-const DeleteModal: React.FC<Props> = ({ serie, onConfirm, onCancel }) => {
+const DeleteSerieModal: React.FC<Props> = ({ serie, onConfirm, onCancel }) => {
   if (!serie) return null;
 
   return (
@@ -44,4 +43,4 @@ const DeleteModal: React.FC<Props> = ({ serie, onConfirm, onCancel }) => {
   );
 };
 
-export default DeleteModal;
+export default DeleteSerieModal;
