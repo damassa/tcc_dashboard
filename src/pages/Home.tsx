@@ -181,7 +181,7 @@ const Home: React.FC = () => {
                 {/* Botões no canto direito */}
                 <div className="p-4 flex justify-end gap-2">
                   <Link
-                    to="/editCategory"
+                    to={`/editCategory/${category.id}`}
                     className="flex items-center gap-1 text-purple-400 hover:text-purple-300 transition cursor-pointer"
                   >
                     <Pencil className="w-4 h-4" />

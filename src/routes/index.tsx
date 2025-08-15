@@ -8,6 +8,8 @@ import PrivateRoute from "../components/PrivateRoute";
 import Home from "../pages/Home";
 import AddCategoryPage from "../pages/AddCategoryPage";
 import AddSeriePage from "../pages/AddSeriePage";
+import EditCategory from "../components/EditCategory";
+import EditSerie from "../components/EditSerie";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,8 +22,18 @@ const router = createBrowserRouter(
       />
 
       <Route
+        path="/editSerie/:id"
+        element={<PrivateRoute element={<EditSerie />} />}
+      />
+
+      <Route
         path="/addCategory"
         element={<PrivateRoute element={<AddCategoryPage />} />}
+      />
+
+      <Route
+        path="/editCategory/:id"
+        element={<PrivateRoute element={<EditCategory />} />}
       />
 
       <Route path="/login" element={<Login />} />

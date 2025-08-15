@@ -28,6 +28,13 @@ export const updateCategory = async (
   return res.data;
 };
 
+export const getCategoryById = async (
+  id: number
+): Promise<CategoryResponse> => {
+  const res = await api.get(`/api/v1/categories/${id}`);
+  return res.data;
+};
+
 export const deleteCategory = async (id: number) => {
   const res = await api.delete(`/api/v1/categories/${id}`);
   return res.data;

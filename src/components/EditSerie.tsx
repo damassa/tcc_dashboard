@@ -2,8 +2,8 @@ import React from "react";
 
 // import { Container } from './styles';
 
-const EditCategoryModal: React.FC = () => {
+const EditSerie: React.FC = () => {
   return <div />;
 };
 
-export default EditCategoryModal;
+export default EditSerie;
