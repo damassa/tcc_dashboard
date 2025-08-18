@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
           <Link to="/">
             <img src={LogoImage} className="w-8 h-8" />
           </Link>
-          <span>Toku Dashboard</span>
+          <span>Dashboard</span>
         </div>
 
         {/* Botão mobile */}

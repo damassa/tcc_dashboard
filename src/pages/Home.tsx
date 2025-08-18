@@ -81,7 +81,26 @@ const Home: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="text-white p-8">Carregando séries...</div>;
+    return (
+      <div className="px-4 py-8 text-white">
+        <h1 className="text-2xl font-bold mb-6 text-purple-500">
+          Séries Cadastradas
+        </h1>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div
+              key={i}
+              className="bg-zinc-900 rounded-2xl shadow-md border border-zinc-800 p-4 animate-pulse"
+            >
+              <div className="w-full h-40 bg-zinc-800 rounded-lg mb-4"></div>
+              <div className="h-4 bg-zinc-800 rounded w-3/4 mb-2"></div>
+              <div className="h-3 bg-zinc-800 rounded w-1/2"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -135,6 +154,12 @@ const Home: React.FC = () => {
                 </div>
               ))}
             </div>
+
+            {loading && series.length > 0 && (
+              <div className="flex justify-center items-center py-6">
+                <div className="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
 
             {/* Paginação */}
             <div className="flex justify-center gap-4 mt-8">
