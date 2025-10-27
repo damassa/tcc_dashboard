@@ -1,7 +1,5 @@
 import React, { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import axios from "axios";
 import api, { notAuthApi } from "../api/api";
 import { LogIn } from "lucide-react";
 
