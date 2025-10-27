@@ -1,6 +1,5 @@
 import api from "./api";
 import type { SerieResponse } from "../types/serie";
-import type { SeriePayload } from "../types/serie";
 
 export const getAllSeries = async (): Promise<SerieResponse[]> => {
   try {
@@ -27,11 +26,11 @@ export const getSerieById = async (id: number): Promise<SerieResponse> => {
   return response.data;
 };
 
-export const createSerie = async (data: SeriePayload) => {
+export const createSerie = async (data: SerieResponse) => {
   return await api.post("/api/v1/series", data);
 };
 
-export const updateSerie = async (id: number, data: SeriePayload) => {
+export const updateSerie = async (id: number, data: SerieResponse) => {
   return await api.patch(`/api/v1/series/${id}`, data);
 };
 
