@@ -6,12 +6,12 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        "pulse-slow": "pulse 4s ease-in-out infinite",
+        "fade-in-down": "fadeInDown 0.3s ease-out",
       },
       keyframes: {
-        pulse: {
-          "0%, 100%": { opacity: 0.6 },
-          "50%": { opacity: 1 },
+        fadeInDown: {
+          "0%": { opacity: 0, transform: "translateY(-10px)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
         },
       },
     },
