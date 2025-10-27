@@ -48,6 +48,14 @@ const Navbar: React.FC = () => {
           </Link>
 
           <Link
+            to="/addEpisode"
+            className="flex items-center gap-2 hover:text-purple-400 transition cursor-pointer"
+          >
+            <PlusCircle className="w-5 h-5" />
+            Novo Episódio
+          </Link>
+
+          <Link
             to="/addCategory"
             className="flex items-center gap-2 hover:text-purple-400 transition cursor-pointer"
           >

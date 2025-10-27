@@ -49,6 +49,7 @@ const EditSerie: React.FC = () => {
       try {
         const response = await api.get(`/api/v1/series/${serieId}`);
         const serie = response.data;
+
         setValue("name", serie.name);
         setValue("year", serie.year);
         setValue("image", serie.image);
